@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 人格类型测试 | 现代简约版</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <style>
+        /* 基础重置与变量定义 */
+        :root {
+            /* 浅色主题 */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --border-color: #e0e0e0;
+            --primary-color: #4a6fa5;
+            --primary-light: #6a8bc5;
+            --secondary-color: #6c757d;
+            --accent-color: #e63946;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-2xl: 2rem;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+        }
+
+        /* 深色主题 */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #121212;
+                --bg-secondary: #1e1e1e;
+                --bg-card: #242424;
+                --text-primary: #f0f0f0;
+                --text-secondary: #b0b0b0;
+                --text-muted: #777777;
+                --border-color: #3a3a3a;
+                --primary-color: #5a8bd6;
+                --primary-light: #7aabf6;
+                --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+                --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
+                --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        /* 页面通用样式 */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 欢迎页面 */
+        .welcome-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-md);
+        }
+
+        h1 {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+
+        .subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            font-weight: 400;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-xl) 0;
+        }
+
+        .feature {
+            padding: var(--spacing-md);
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .feature h3 {
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .feature p {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-lg {
+            padding: 1rem 3rem;
+            font-size: var(--font-size-lg);
+        }
+
+        /* 测试页面 */
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .progress-container {
+            flex: 1;
+            margin-right: var(--spacing-md);
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xs);
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .question-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--spacing-lg) 0;
+        }
+
+        .question-number {
+            font-size: var(--font-size-sm);
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .question-text {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: var(--spacing-xl);
+            line-height: 1.4;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        @media (max-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            padding: var(--spacing-lg);
+            background-color: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(74, 111, 165, 0.05);
+        }
+
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--bg-secondary);
+            border-radius: 50%;
+            margin-right: var(--spacing-md);
+            flex-shrink: 0;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .option-btn.selected .option-letter {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .option-text {
+            font-size: var(--font-size-base);
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .test-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* 结果页面 */
+        .result-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-lg);
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .result-title {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .result-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .personality-type {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: var(--spacing-md) 0;
+            letter-spacing: 2px;
+        }
+
+        .personality-description {
+            font-size: var(--font-size-lg);
+            color: var(--text-primary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .dimensions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-xl) 0;
+        }
+
+        .dimension {
+            padding: var(--spacing-md);
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .dimension-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 600;
+        }
+
+        .dimension-letter {
+            color: var(--primary-color);
+        }
+
+        .dimension-bar {
+            height: 8px;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: var(--spacing-xs) 0;
+        }
+
+        .dimension-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            width: 50%;
+        }
+
+        .dimension-value {
+            text-align: right;
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .detailed-results {
+            margin: var(--spacing-xl) 0;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .result-card {
+            padding: var(--spacing-lg);
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .result-card h3 {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary-color);
+        }
+
+        .result-card h3 i {
+            margin-right: var(--spacing-sm);
+        }
+
+        .result-card ul {
+            list-style-type: none;
+        }
+
+        .result-card li {
+            padding: var(--spacing-xs) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-card li:last-child {
+            border-bottom: none;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            margin: var(--spacing-xl) 0;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .text-result {
+            background-color: var(--bg-card);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            margin: var(--spacing-lg) 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .text-result pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            font-size: var(--font-size-sm);
+            line-height: 1.5;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: var(--spacing-md);
+            background-color: var(--bg-secondary);
+            border-radius: var(--border-radius-sm);
+        }
+
+        /* 加载状态 */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: var(--spacing-md);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 工具类 */
+        .hidden {
+            display: none !important;
+        }
+
+        .mt-1 { margin-top: var(--spacing-xs); }
+        .mt-2 { margin-top: var(--spacing-sm); }
+        .mt-3 { margin-top: var(--spacing-md); }
+        .mt-4 { margin-top: var(--spacing-lg); }
+        .mt-5 { margin-top: var(--spacing-xl); }
+
+        .mb-1 { margin-bottom: var(--spacing-xs); }
+        .mb-2 { margin-bottom: var(--spacing-sm); }
+        .mb-3 { margin-bottom: var(--spacing-md); }
+        .mb-4 { margin-bottom: var(--spacing-lg); }
+        .mb-5 { margin-bottom: var(--spacing-xl); }
+
+        .text-center { text-align: center; }
+        .text-muted { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 欢迎页面 -->
+        <div id="welcome-page" class="page active">
+            <div class="welcome-container">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h1>MBTI 人格类型测试</h1>
+                <p class="subtitle">基于荣格心理学的科学人格评估，发现真实的自己</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-clipboard-check"></i>
+                        <h3>30道精选问题</h3>
+                        <p>基于心理学研究的标准化测试</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>16种人格分析</h3>
+                        <p>详细的性格解读与职业建议</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-lock"></i>
+                        <h3>完全隐私保护</h3>
+                        <p>无需联网，数据永不离开您的设备</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-download"></i>
+                        <h3>保存完整报告</h3>
+                        <p>生成可分享的详细分析报告</p>
+                    </div>
+                </div>
+                
+                <button id="start-test" class="btn btn-lg mt-5">
+                    开始测试
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                
+                <p class="text-muted mt-4">测试时间约5-7分钟 | 请根据第一直觉选择</p>
+            </div>
+        </div>
+
+        <!-- 测试页面 -->
+        <div id="test-page" class="page">
+            <div class="test-header">
+                <div class="progress-container">
+                    <div class="progress-text">
+                        <span>MBTI人格测试</span>
+                        <span id="progress-text">第1题/共30题</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                </div>
+                <button id="back-btn" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i>
+                    返回
+                </button>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number" id="question-number">问题 1</div>
+                <div class="question-text" id="question-text">在社交场合中，你通常：</div>
+                
+                <div class="options-container">
+                    <button class="option-btn" data-value="E">
+                        <div class="option-letter">A</div>
+                        <div class="option-text">主动与他人交谈，认识新朋友</div>
+                    </button>
+                    <button class="option-btn" data-value="I">
+                        <div class="option-letter">B</div>
+                        <div class="option-text">更愿意与熟悉的人交谈或观察他人</div>
+                    </button>
+                </div>
+
+                <div class="test-footer">
+                    <div class="text-muted">
+                        <i class="fas fa-lightbulb"></i>
+                        请根据您的第一反应选择，不要过度思考
+                    </div>
+                    <button id="next-btn" class="btn" disabled>
+                        下一题
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 加载页面 -->
+        <div id="loading-page" class="page">
+            <div class="loading">
+                <div class="spinner"></div>
+                <h2 class="mt-3">正在分析您的结果...</h2>
+                <p class="text-muted mt-2">我们正在根据您的选择计算人格类型</p>
+            </div>
+        </div>
+
+        <!-- 结果页面 -->
+        <div id="result-page" class="page">
+            <div class="result-header">
+                <h1 class="result-title">您的MBTI人格类型</h1>
+                <p class="result-subtitle">基于30道测试题的详细分析报告</p>
+                
+                <div id="primary-type" class="personality-type">INFJ</div>
+                <div id="type-description" class="personality-description">
+                    提倡者型人格 - 安静而神秘，同时鼓舞人心且不知疲倦的理想主义者
+                </div>
+                
+                <div id="match-info" class="mt-3 text-muted">
+                    <i class="fas fa-chart-line"></i>
+                    与您的选择匹配度：<strong>92%</strong>
+                </div>
+            </div>
+
+            <!-- 四个维度 -->
+            <div class="dimensions-container">
+                <div class="dimension">
+                    <div class="dimension-label">
+                        <span>外向(E) / 内向(I)</span>
+                        <span class="dimension-letter" id="dim-ei">I</span>
+                    </div>
+                    <div class="dimension-bar">
+                        <div class="dimension-fill" id="dim-ei-bar" style="width: 75%"></div>
+                    </div>
+                    <div class="dimension-value" id="dim-ei-value">75% 内向</div>
+                </div>
+                
+                <div class="dimension">
+                    <div class="dimension-label">
+                        <span>实感(S) / 直觉(N)</span>
+                        <span class="dimension-letter" id="dim-sn">N</span>
+                    </div>
+                    <div class="dimension-bar">
+                        <div class="dimension-fill" id="dim-sn-bar" style="width: 85%"></div>
+                    </div>
+                    <div class="dimension-value" id="dim-sn-value">85% 直觉</div>
+                </div>
+                
+                <div class="dimension">
+                    <div class="dimension-label">
+                        <span>思考(T) / 情感(F)</span>
+                        <span class="dimension-letter" id="dim-tf">F</span>
+                    </div>
+                    <div class="dimension-bar">
+                        <div class="dimension-fill" id="dim-tf-bar" style="width: 90%"></div>
+                    </div>
+                    <div class="dimension-value" id="dim-tf-value">90% 情感</div>
+                </div>
+                
+                <div class="dimension">
+                    <div class="dimension-label">
+                        <span>判断(J) / 感知(P)</span>
+                        <span class="dimension-letter" id="dim-jp">J</span>
+                    </div>
+                    <div class="dimension-bar">
+                        <div class="dimension-fill" id="dim-jp-bar" style="width: 70%"></div>
+                    </div>
+                    <div class="dimension-value" id="dim-jp-value">70% 判断</div>
+                </div>
+            </div>
+
+            <!-- 详细结果 -->
+            <div class="detailed-results">
+                <h2 class="mb-3">详细分析</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3><i class="fas fa-user"></i> 性格描述</h3>
+                        <div id="personality-desc">
+                            INFJ类型的人具有与生俱来的理想主义和道德感，他们不是懒散的空想家，而是能脚踏实地完成目标。他们是不错的顾问，帮助别人获得更好的生活。
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3><i class="fas fa-briefcase"></i> 适合职业</h3>
+                        <ul id="career-list">
+                            <li>心理咨询师</li>
+                            <li>作家/编辑</li>
+                            <li>教师/教授</li>
+                            <li>人力资源专家</li>
+                            <li>艺术指导</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="result-card">
+                        <h3><i class="fas fa-heart"></i> 恋爱风格</h3>
+                        <div id="love-style">
+                            INFJ在恋爱中寻求深度的精神连接，他们需要伴侣能够理解他们的内心世界。虽然不轻易表达情感，但一旦承诺就会非常忠诚和投入。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 可复制的文字结果 -->
+            <div class="text-result">
+                <h3 class="mb-3">文本结果 (可复制)</h3>
+                <pre id="text-result-content">
+MBTI人格类型: INFJ (提倡者)
+匹配度: 92%
+
+四个维度分析:
+- 内向(I): 75%
+- 直觉(N): 85%
+- 情感(F): 90%
+- 判断(J): 70%
+
+性格描述: INFJ类型的人具有与生俱来的理想主义和道德感，他们不是懒散的空想家，而是能脚踏实地完成目标。他们是不错的顾问，帮助别人获得更好的生活。
+
+适合职业: 心理咨询师、作家/编辑、教师/教授、人力资源专家、艺术指导
+
+恋爱风格: INFJ在恋爱中寻求深度的精神连接，他们需要伴侣能够理解他们的内心世界。虽然不轻易表达情感，但一旦承诺就会非常忠诚和投入。
+                </pre>
+                <button id="copy-text-btn" class="btn btn-outline mt-3">
+                    <i class="fas fa-copy"></i>
+                    复制文本结果
+                </button>
+            </div>
+
+            <!-- 可能的其他类型 -->
+            <div class="result-card mt-4">
+                <h3><i class="fas fa-exchange-alt"></i> 其他可能的人格类型</h3>
+                <div id="alternative-types" class="mt-3">
+                    <div class="alternative-type mb-3">
+                        <strong>INFP (调停者) - 匹配度 78%</strong>
+                        <p class="text-muted">理想主义且忠诚，重视内在和谐，富有创造力。</p>
+                    </div>
+                    <div class="alternative-type">
+                        <strong>ENFJ (主人公) - 匹配度 65%</strong>
+                        <p class="text-muted">充满激情且魅力四射，天生的领导者，善于鼓舞他人。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div class="result-actions">
+                <button id="save-image-btn" class="btn">
+                    <i class="fas fa-camera"></i>
+                    保存为图片
+                </button>
+                <button id="restart-btn" class="btn btn-outline">
+                    <i class="fas fa-redo"></i>
+                    重新测试
+                </button>
+                <button id="share-btn" class="btn btn-outline">
+                    <i class="fas fa-share-alt"></i>
+                    分享结果
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MBTI测试数据
+        const questions = [
+            // E/I维度问题 (10个)
+            { text: "在社交场合中，你通常：", a: "主动与他人交谈，认识新朋友", b: "更愿意与熟悉的人交谈或观察他人", dimension: "EI" },
+            { text: "周末的晚上，你更倾向于：", a: "和朋友一起外出活动", b: "在家放松或进行个人爱好", dimension: "EI" },
+            { text: "当你需要思考重要问题时，你：", a: "喜欢和别人讨论来理清思路", b: "更喜欢独自安静地思考", dimension: "EI" },
+            { text: "你的能量主要来自于：", a: "与他人互动和社交", b: "独处和反思的时间", dimension: "EI" },
+            { text: "在工作或学习中，你更喜欢：", a: "团队合作和集体讨论", b: "独立工作和自主安排", dimension: "EI" },
+            { text: "参加聚会后，你通常感到：", a: "精力充沛，兴奋不已", b: "有些疲惫，需要休息", dimension: "EI" },
+            { text: "结识新朋友时，你通常：", a: "主动开启对话", b: "等待对方先开口", dimension: "EI" },
+            { text: "你更喜欢的工作环境是：", a: "开放、热闹的办公室", b: "安静、私密的个人空间", dimension: "EI" },
+            { text: "当你有好消息时，你首先想：", a: "立刻告诉朋友和家人", b: "自己先享受这个时刻", dimension: "EI" },
+            { text: "你更常被人描述为：", a: "外向、健谈", b: "安静、内省", dimension: "EI" },
+
+            // S/N维度问题 (10个)
+            { text: "你更注重：", a: "具体的现实和事实", b: "潜在的可能性和意义", dimension: "SN" },
+            { text: "描述一件事时，你更倾向于：", a: "准确地描述发生了什么", b: "解释它的意义和影响", dimension: "SN" },
+            { text: "你更喜欢的工作方式是：", a: "按部就班，遵循程序", b: "灵活创新，寻找新方法", dimension: "SN" },
+            { text: "学习新东西时，你更关注：", a: "实际的步骤和应用", b: "背后的理论和概念", dimension: "SN" },
+            { text: "你更相信：", a: "经验和实践验证", b: "直觉和灵感", dimension: "SN" },
+            { text: "制定计划时，你更注重：", a: "具体的细节和安排", b: "总体目标和愿景", dimension: "SN" },
+            { text: "你更擅长：", a: "处理具体、实际的任务", b: "构思创意和可能性", dimension: "SN" },
+            { text: "对于未来，你更倾向于：", a: "基于现有情况做出预测", b: "想象各种可能的发展", dimension: "SN" },
+            { text: "你更常被人描述为：", a: "务实、注重实际", b: "有远见、富有想象力", dimension: "SN" },
+            { text: "解决问题时，你更倾向于：", a: "使用已知有效的方法", b: "尝试新的、创新的方法", dimension: "SN" },
+
+            // T/F维度问题 (10个)
+            { text: "做决定时，你更注重：", a: "逻辑和客观分析", b: "价值观和个人感受", dimension: "TF" },
+            { text: "评价工作时，你更看重：", a: "效率和成果", b: "团队和谐与人际关系", dimension: "TF" },
+            { text: "面对冲突，你更倾向于：", a: "直接指出问题所在", b: "考虑各方感受，委婉处理", dimension: "TF" },
+            { text: "你更常被人描述为：", a: "理性、客观", b: "体贴、善解人意", dimension: "TF" },
+            { text: "批评他人时，你更注重：", a: "事实和问题的本质", b: "对方的感受和接受程度", dimension: "TF" },
+            { text: "你更欣赏的能力是：", a: "分析和解决问题的能力", b: "理解和关怀他人的能力", dimension: "TF" },
+            { text: "在工作中，你更重视：", a: "完成任务，达到目标", b: "与同事建立良好关系", dimension: "TF" },
+            { text: "面对困难决定，你更依赖：", a: "利弊分析和数据", b: "内心感受和价值观", dimension: "TF" },
+            { text: "你更擅长：", a: "客观地分析情况", b: "理解他人的情绪", dimension: "TF" },
+            { text: "评价艺术作品时，你更注重：", a: "技巧和结构的完美", b: "情感表达和感染力", dimension: "TF" }
+        ];
+
+        // 随机打乱问题顺序，但保持维度平衡
+        function shuffleQuestions() {
+            // 按维度分组
+            const eiQuestions = questions.filter(q => q.dimension === "EI");
+            const snQuestions = questions.filter(q => q.dimension === "SN");
+            const tfQuestions = questions.filter(q => q.dimension === "TF");
+            
+            // 每个维度随机选择5个问题
+            const selectedEi = eiQuestions.sort(() => Math.random() - 0.5).slice(0, 7);
+            const selectedSn = snQuestions.sort(() => Math.random() - 0.5).slice(0, 8);
+            const selectedTf = tfQuestions.sort(() => Math.random() - 0.5).slice(0, 7);
+            
+            // 合并并添加8个JP维度问题
+            const selectedQuestions = [...selectedEi, ...selectedSn, ...selectedTf];
+            
+            // 添加8个JP维度问题（通过混合其他维度来模拟）
+            for (let i = 0; i < 8; i++) {
+                selectedQuestions.push({
+                    text: i % 2 === 0 ? "你更喜欢的生活方式是：" : "处理任务时，你更倾向于：",
+                    a: i % 2 === 0 ? "有计划、有组织的安排" : "提前规划，按时完成",
+                    b: i % 2 === 0 ? "灵活、随性的方式" : "灵活调整，适应变化",
+                    dimension: "JP"
+                });
+            }
+            
+            // 最终打乱所有问题
+            return selectedQuestions.sort(() => Math.random() - 0.5).slice(0, 30);
+        }
+
+        // 人格类型描述数据
+        const personalityData = {
+            "INFJ": {
+                name: "提倡者",
+                description: "INFJ类型的人具有与生俱来的理想主义和道德感，他们不是懒散的空想家，而是能脚踏实地完成目标。他们是不错的顾问，帮助别人获得更好的生活。",
+                careers: ["心理咨询师", "作家/编辑", "教师/教授", "人力资源专家", "艺术指导", "社会工作者", "职业顾问", "神职人员"],
+                loveStyle: "INFJ在恋爱中寻求深度的精神连接，他们需要伴侣能够理解他们的内心世界。虽然不轻易表达情感，但一旦承诺就会非常忠诚和投入。",
+                strengths: ["富有创意", "洞察力强", "有原则", "热情", "利他"],
+                weaknesses: ["敏感", "完美主义", "不愿面对矛盾", "隐私性强", "理想化"]
+            },
+            "INTJ": {
+                name: "建筑师",
+                description: "INTJ是足智多谋的战略家，对任何感兴趣的事物都能看到改进的可能。他们是独立的思考者，对低效率感到不耐烦，但对自己和他人的能力都要求很高。",
+                careers: ["科学家", "工程师", "大学教授", "法官", "管理顾问", "投资银行家", "软件开发者", "企业家"],
+                loveStyle: "INTJ在恋爱中重视智力上的共鸣，他们欣赏独立和聪明的伴侣。虽然不擅长浪漫表达，但他们的忠诚和可靠性是关系的坚实基石。",
+                strengths: ["理性", "有远见", "独立", "坚定", "好奇"],
+                weaknesses: ["傲慢", "冷漠", "完美主义", "固执", "不擅长社交"]
+            },
+            "INFP": {
+                name: "调停者",
+                description: "INFP是安静、开放、思想开放的理想主义者，他们以自己的价值观和信念为指导。他们想要一份能与自己价值观相符的工作，而不仅仅是赚钱。",
+                careers: ["作家", "心理学家", "艺术家", "音乐家", "图书管理员", "社会工作者", "记者", "翻译"],
+                loveStyle: "INFP在恋爱中追求深刻的情感连接和精神共鸣。他们是浪漫的理想主义者，需要伴侣理解并欣赏他们独特的内心世界。",
+                strengths: ["有理想", "忠诚", "有创造力", "富有同情心", "开放"],
+                weaknesses: ["不切实际", "过于敏感", "自我隔离", "不擅长实际事务", "优柔寡断"]
+            },
+            "INTP": {
+                name: "逻辑学家",
+                description: "INTP是富有创造力的发明家，对知识有着不知疲倦的渴望。他们喜欢分析模式，在思想的世界里游刃有余，并喜欢辩论理论概念。",
+                careers: ["哲学家", "数学家", "物理学家", "程序员", "研究员", "大学教授", "系统分析师", "摄影师"],
+                loveStyle: "INTP在恋爱中需要智力上的刺激和自由。他们欣赏独立思考的伴侣，虽然情感表达可能有些笨拙，但他们的忠诚和理解是独特的。",
+                strengths: ["分析能力强", "原创", "好奇", "客观", "诚实"],
+                weaknesses: ["不善于社交", "心不在焉", "好争辩", "冷漠", "不切实际"]
+            },
+            "ENFJ": {
+                name: "主人公",
+                description: "ENFJ是天生富有魅力的领导者，能够用热情和感染力激励他人。他们有很强的责任心，关心他人的感受，并努力帮助每个人发挥潜力。",
+                careers: ["教师", "心理咨询师", "人力资源经理", "公关专家", "销售经理", "活动策划", "政治家", "教练"],
+                loveStyle: "ENFJ在恋爱中是热情和关怀的伴侣。他们善于表达情感，重视关系的和谐与成长，并愿意为伴侣付出大量时间和精力。",
+                strengths: ["有魅力", "有同情心", "有领导力", "可靠", "热情"],
+                weaknesses: ["过于理想化", "不切实际", "过度投入", "敏感", "控制欲强"]
+            },
+            "ENFP": {
+                name: "竞选者",
+                description: "ENFP是热情、有创造力、社交能力强的人，他们总能找到理由微笑。他们喜欢探索新想法，结识新朋友，并总是愿意接受新的冒险。",
+                careers: ["记者", "演员", "咨询师", "设计师", "营销专员", "活动策划", "导游", "创业者"],
+                loveStyle: "ENFP在恋爱中充满激情和创意。他们喜欢惊喜和冒险，需要伴侣能够跟上他们快速变化的思维和活跃的生活方式。",
+                strengths: ["热情", "有创造力", "社交能力强", "乐观", "灵活"],
+                weaknesses: ["不专注", "冲动", "情绪化", "讨厌常规", "过度承诺"]
+            },
+            "ENTJ": {
+                name: "指挥官",
+                description: "ENTJ是天生具有领导能力的人，他们喜欢掌控局面。他们能看到低效率的地方，并愿意提出和实施解决方案。他们喜欢长期规划和目标设定。",
+                careers: ["CEO", "律师", "项目经理", "管理顾问", "企业家", "军官", "政治家", "投资银行家"],
+                loveStyle: "ENTJ在恋爱中是直接和忠诚的伴侣。他们欣赏有抱负的伴侣，重视关系的稳定和共同成长，虽然有时可能显得过于强势。",
+                strengths: ["高效", "自信", "有战略眼光", "果断", "有领导力"],
+                weaknesses: ["固执", "缺乏耐心", "傲慢", "不敏感", "好斗"]
+            },
+            "ENTP": {
+                name: "辩论家",
+                description: "ENTP是聪明好奇的思想家，他们不会错过任何智力挑战的机会。他们喜欢分析人们的行为，擅长理解复杂的概念，并享受与别人辩论。",
+                careers: ["律师", "创业者", "工程师", "发明家", "记者", "营销专家", "咨询师", "程序员"],
+                loveStyle: "ENTP在恋爱中需要智力刺激和自由。他们欣赏能跟上他们快速思维的伴侣，喜欢辩论和探索新想法，虽然可能显得有些玩世不恭。",
+                strengths: ["聪明", "有创造力", "善辩", "精力充沛", "有魅力"],
+                weaknesses: ["不敏感", "不专注", "好争辩", "不切实际", "不喜欢常规"]
+            },
+            "ISFJ": {
+                name: "守卫者",
+                description: "ISFJ是极其专注和温暖的人，总是准备保护他们所爱的人。他们负责任且务实，努力履行义务，对服务他人有着强烈的责任感。",
+                careers: ["护士", "教师", "行政人员", "会计", "图书管理员", "社工", "牧师", "保姆"],
+                loveStyle: "ISFJ在恋爱中是忠诚和体贴的伴侣。他们通过实际行动表达爱意，重视承诺和稳定，并愿意为关系付出巨大的努力。",
+                strengths: ["支持性强", "可靠", "耐心", "务实", "负责"],
+                weaknesses: ["害羞", "过于谦虚", "压抑情感", "抗拒变化", "过度承担"]
+            },
+            "ISFP": {
+                name: "探险家",
+                description: "ISFP是灵活有魅力的艺术家，总是愿意尝试新的事物和体验。他们活在当下，喜欢按照自己的节奏生活，并重视个人的自由和空间。",
+                careers: ["艺术家", "设计师", "音乐家", "兽医", "园丁", "物理治疗师", "厨师", "消防员"],
+                loveStyle: "ISFP在恋爱中温柔而忠诚。他们通过行动而非言语表达爱意，重视当下的体验，需要伴侣尊重他们的个人空间和独立性。",
+                strengths: ["有魅力", "敏感", "有创造力", "灵活", "善于观察"],
+                weaknesses: ["过于独立", "不善于规划", "过于敏感", "逃避冲突", "冲动"]
+            },
+            "ISTJ": {
+                name: "物流师",
+                description: "ISTJ是务实和负责任的人，他们相信传统和法律。他们可靠且安静，喜欢按部就班地工作，并以认真和尽职的态度完成任务。",
+                careers: ["会计", "审计师", "军官", "法官", "银行职员", "行政人员", "工程师", "药剂师"],
+                loveStyle: "ISTJ在恋爱中是可靠和忠诚的伴侣。他们通过实际行动证明爱意，重视承诺和稳定，并期望伴侣同样认真对待关系。",
+                strengths: ["负责", "务实", "忠诚", "安静", "有条理"],
+                weaknesses: ["固执", "不灵活", "过于注重细节", "不善于表达情感", "抗拒新想法"]
+            },
+            "ISTP": {
+                name: "鉴赏家",
+                description: "ISTP是大胆务实的实验家，他们擅长使用各种工具。他们喜欢分析事物的工作原理，并经常通过拆解和重组来理解系统。",
+                careers: ["工程师", "机械师", "飞行员", "运动员", "程序员", "警察", "消防员", "工匠"],
+                loveStyle: "ISTP在恋爱中独立而忠诚。他们通过行动表达爱意，需要个人空间和自由，并欣赏能够理解他们务实方式的伴侣。",
+                strengths: ["务实", "灵活", "善于分析", "冷静", "独立"],
+                weaknesses: ["不敏感", "冒险", "不善于表达情感", "容易无聊", "抗拒承诺"]
+            },
+            "ESFJ": {
+                name: "执政官",
+                description: "ESFJ是特别关心他人、受欢迎且有责任心的人。他们努力创造和谐的环境，并总是愿意为朋友和家人提供帮助。",
+                careers: ["护士", "教师", "社工", "人力资源", "销售", "活动策划", "牧师", "行政人员"],
+                loveStyle: "ESFJ在恋爱中是热情和关怀的伴侣。他们善于表达情感，重视关系的和谐与稳定，并愿意为伴侣付出大量时间和精力。",
+                strengths: ["友善", "负责", "敏感", "外向", "可靠"],
+                weaknesses: ["过于敏感", "依赖认可", "抗拒变化", "过于传统", "控制欲强"]
+            },
+            "ESFP": {
+                name: "表演者",
+                description: "ESFP是自发、精力充沛的表演者，他们喜欢成为关注的焦点。他们活在当下，喜欢与他人分享快乐，并总是愿意尝试新事物。",
+                careers: ["演员", "销售", "主持人", "导游", "设计师", "摄影师", "运动员", "幼师"],
+                loveStyle: "ESFP在恋爱中热情而有趣。他们喜欢惊喜和冒险，通过行动表达爱意，并需要伴侣能够享受生活中的乐趣和刺激。",
+                strengths: ["有魅力", "乐观", "善于社交", "自发", "务实"],
+                weaknesses: ["不专注", "冲动", "讨厌理论", "容易无聊", "缺乏远见"]
+            },
+            "ESTJ": {
+                name: "总经理",
+                description: "ESTJ是出色的管理者，他们擅长让事情有条不紊地进行。他们重视传统和规则，并以高效和负责任的方式完成工作。",
+                careers: ["军官", "法官", "项目经理", "学校行政", "银行经理", "企业家", "政治家", "警察"],
+                loveStyle: "ESTJ在恋爱中是可靠和直接的伴侣。他们通过实际行动表达爱意，重视承诺和稳定，并期望关系有清晰的规则和期望。",
+                strengths: ["负责", "务实", "忠诚", "高效", "有条理"],
+                weaknesses: ["固执", "不灵活", "不敏感", "过于注重规则", "抗拒创新"]
+            },
+            "ESTP": {
+                name: "企业家",
+                description: "ESTP是精力充沛的冒险家，他们聪明、精力充沛，并具有很强的感知力。他们喜欢生活在边缘，并愿意为了刺激而承担风险。",
+                careers: ["销售", "运动员", "企业家", "警察", "消防员", "记者", "飞行员", "机械师"],
+                loveStyle: "ESTP在恋爱中充满激情和冒险精神。他们喜欢惊喜和刺激，通过行动表达爱意，并需要伴侣能够跟上他们活跃的生活方式。",
+                strengths: ["勇敢", "务实", "有魅力", "自发", "善于观察"],
+                weaknesses: ["冲动", "不敏感", "容易无聊", "讨厌理论", "冒险"]
+            }
+        };
+
+        // 应用状态
+        let currentQuestionIndex = 0;
+        let answers = [];
+        let shuffledQuestions = [];
+        let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+        // DOM元素
+        const welcomePage = document.getElementById('welcome-page');
+        const testPage = document.getElementById('test-page');
+        const loadingPage = document.getElementById('loading-page');
+        const resultPage = document.getElementById('result-page');
+
+        const startTestBtn = document.getElementById('start-test');
+        const backBtn = document.getElementById('back-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const saveImageBtn = document.getElementById('save-image-btn');
+        const copyTextBtn = document.getElementById('copy-text-btn');
+        const shareBtn = document.getElementById('share-btn');
+
+        const progressText = document.getElementById('progress-text');
+        const progressFill = document.getElementById('progress-fill');
+        const questionNumber = document.getElementById('question-number');
+        const questionText = document.getElementById('question-text');
+        const optionBtns = document.querySelectorAll('.option-btn');
+
+        // 初始化
+        function init() {
+            shuffledQuestions = shuffleQuestions();
+            resetTest();
+            setupEventListeners();
+        }
+
+        // 重置测试
+        function resetTest() {
+            currentQuestionIndex = 0;
+            answers = [];
+            scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+            loadQuestion();
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            startTestBtn.addEventListener('click', () => {
+                welcomePage.classList.remove('active');
+                testPage.classList.add('active');
+            });
+
+            backBtn.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    loadQuestion();
+                } else {
+                    testPage.classList.remove('active');
+                    welcomePage.classList.add('active');
+                }
+            });
+
+            nextBtn.addEventListener('click', goToNextQuestion);
+
+            optionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除之前的选择
+                    optionBtns.forEach(b => b.classList.remove('selected'));
+                    
+                    // 标记当前选择
+                    this.classList.add('selected');
+                    
+                    // 启用下一步按钮
+                    nextBtn.disabled = false;
+                    
+                    // 记录答案
+                    const currentQuestion = shuffledQuestions[currentQuestionIndex];
+                    const value = this.dataset.value;
+                    answers[currentQuestionIndex] = value;
+                    
+                    // 更新分数
+                    if (currentQuestion.dimension === "EI") {
+                        scores[value]++;
+                    } else if (currentQuestion.dimension === "SN") {
+                        scores[value]++;
+                    } else if (currentQuestion.dimension === "TF") {
+                        scores[value]++;
+                    } else if (currentQuestion.dimension === "JP") {
+                        scores[value]++;
+                    }
+                });
+            });
+
+            restartBtn.addEventListener('click', () => {
+                resultPage.classList.remove('active');
+                welcomePage.classList.add('active');
+                resetTest();
+            });
+
+            saveImageBtn.addEventListener('click', saveAsImage);
+
+            copyTextBtn.addEventListener('click', copyTextResult);
+
+            shareBtn.addEventListener('click', shareResult);
+        }
+
+        // 加载问题
+        function loadQuestion() {
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            
+            // 更新进度
+            const progress = ((currentQuestionIndex + 1) / shuffledQuestions.length) * 100;
+            progressFill.style.width = `${progress}%`;
+            progressText.textContent = `第${currentQuestionIndex + 1}题/共${shuffledQuestions.length}题`;
+            
+            // 更新问题
+            questionNumber.textContent = `问题 ${currentQuestionIndex + 1}`;
+            questionText.textContent = currentQuestion.text;
+            
+            // 更新选项
+            const optionABtns = document.querySelectorAll('.option-btn');
+            optionABtns[0].querySelector('.option-text').textContent = currentQuestion.a;
+            optionABtns[1].querySelector('.option-text').textContent = currentQuestion.b;
+            
+            // 重置选项状态
+            optionABtns.forEach(btn => {
+                btn.classList.remove('selected');
+                
+                // 根据维度设置data-value
+                if (currentQuestion.dimension === "EI") {
+                    btn.dataset.value = btn === optionABtns[0] ? "E" : "I";
+                } else if (currentQuestion.dimension === "SN") {
+                    btn.dataset.value = btn === optionABtns[0] ? "S" : "N";
+                } else if (currentQuestion.dimension === "TF") {
+                    btn.dataset.value = btn === optionABtns[0] ? "T" : "F";
+                } else if (currentQuestion.dimension === "JP") {
+                    btn.dataset.value = btn === optionABtns[0] ? "J" : "P";
+                }
+            });
+            
+            // 禁用下一步按钮
+            nextBtn.disabled = true;
+            
+            // 更新返回按钮文本
+            backBtn.innerHTML = currentQuestionIndex === 0 
+                ? '<i class="fas fa-arrow-left"></i> 返回主页'
+                : '<i class="fas fa-arrow-left"></i> 上一题';
+        }
+
+        // 转到下一题
+        function goToNextQuestion() {
+            if (currentQuestionIndex < shuffledQuestions.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                // 所有问题已回答，显示结果
+                showResults();
+            }
+        }
+
+        // 计算MBTI类型
+        function calculateMBTI() {
+            const eiScore = scores.E > scores.I ? "E" : "I";
+            const snScore = scores.S > scores.N ? "S" : "N";
+            const tfScore = scores.T > scores.F ? "T" : "F";
+            const jpScore = scores.J > scores.P ? "J" : "P";
+            
+            const mbtiType = eiScore + snScore + tfScore + jpScore;
+            
+            // 计算百分比
+            const totalEI = scores.E + scores.I;
+            const totalSN = scores.S + scores.N;
+            const totalTF = scores.T + scores.F;
+            const totalJP = scores.J + scores.P;
+            
+            const eiPercent = eiScore === "E" 
+                ? Math.round((scores.E / totalEI) * 100)
+                : Math.round((scores.I / totalEI) * 100);
+            
+            const snPercent = snScore === "S"
+                ? Math.round((scores.S / totalSN) * 100)
+                : Math.round((scores.N / totalSN) * 100);
+            
+            const tfPercent = tfScore === "T"
+                ? Math.round((scores.T / totalTF) * 100)
+                : Math.round((scores.F / totalTF) * 100);
+            
+            const jpPercent = jpScore === "J"
+                ? Math.round((scores.J / totalJP) * 100)
+                : Math.round((scores.P / totalJP) * 100);
+            
+            return {
+                type: mbtiType,
+                dimensions: {
+                    ei: { letter: eiScore, percent: eiPercent },
+                    sn: { letter: snScore, percent: snPercent },
+                    tf: { letter: tfScore, percent: tfPercent },
+                    jp: { letter: jpScore, percent: jpPercent }
+                }
+            };
+        }
+
+        // 显示结果
+        function showResults() {
+            testPage.classList.remove('active');
+            loadingPage.classList.add('active');
+            
+            // 模拟加载时间
+            setTimeout(() => {
+                const result = calculateMBTI();
+                const personality = personalityData[result.type];
+                
+                // 更新结果页面
+                document.getElementById('primary-type').textContent = result.type;
+                document.getElementById('type-description').textContent = `${result.type} (${personality.name}) - ${personality.description.split('。')[0]}`;
+                
+                // 更新维度显示
+                const dims = result.dimensions;
+                document.getElementById('dim-ei').textContent = dims.ei.letter;
+                document.getElementById('dim-ei-bar').style.width = `${dims.ei.percent}%`;
+                document.getElementById('dim-ei-value').textContent = `${dims.ei.percent}% ${dims.ei.letter === 'E' ? '外向' : '内向'}`;
+                
+                document.getElementById('dim-sn').textContent = dims.sn.letter;
+                document.getElementById('dim-sn-bar').style.width = `${dims.sn.percent}%`;
+                document.getElementById('dim-sn-value').textContent = `${dims.sn.percent}% ${dims.sn.letter === 'S' ? '实感' : '直觉'}`;
+                
+                document.getElementById('dim-tf').textContent = dims.tf.letter;
+                document.getElementById('dim-tf-bar').style.width = `${dims.tf.percent}%`;
+                document.getElementById('dim-tf-value').textContent = `${dims.tf.percent}% ${dims.tf.letter === 'T' ? '思考' : '情感'}`;
+                
+                document.getElementById('dim-jp').textContent = dims.jp.letter;
+                document.getElementById('dim-jp-bar').style.width = `${dims.jp.percent}%`;
+                document.getElementById('dim-jp-value').textContent = `${dims.jp.percent}% ${dims.jp.letter === 'J' ? '判断' : '感知'}`;
+                
+                // 更新详细描述
+                document.getElementById('personality-desc').textContent = personality.description;
+                
+                // 更新职业列表
+                const careerList = document.getElementById('career-list');
+                careerList.innerHTML = '';
+                personality.careers.slice(0, 5).forEach(career => {
+                    const li = document.createElement('li');
+                    li.textContent = career;
+                    careerList.appendChild(li);
+                });
+                
+                // 更新恋爱风格
+                document.getElementById('love-style').textContent = personality.loveStyle;
+                
+                // 计算匹配度（基于答案一致性）
+                const consistency = Math.round((answers.filter((a, i) => {
+                    const q = shuffledQuestions[i];
+                    if (!q) return false;
+                    if (q.dimension === "EI") return a === result.type[0];
+                    if (q.dimension === "SN") return a === result.type[1];
+                    if (q.dimension === "TF") return a === result.type[2];
+                    if (q.dimension === "JP") return a === result.type[3];
+                    return false;
+                }).length / shuffledQuestions.length) * 100);
+                
+                document.getElementById('match-info').innerHTML = 
+                    `<i class="fas fa-chart-line"></i> 与您的选择匹配度：<strong>${consistency}%</strong>`;
+                
+                // 更新文本结果
+                updateTextResult(result, personality, consistency);
+                
+                // 更新其他可能类型
+                updateAlternativeTypes(result.type);
+                
+                // 显示结果页面
+                loadingPage.classList.remove('active');
+                resultPage.classList.add('active');
+            }, 1500);
+        }
+
+        // 更新文本结果
+        function updateTextResult(result, personality, consistency) {
+            const textContent = `
+MBTI人格类型: ${result.type} (${personality.name})
+匹配度: ${consistency}%
+
+四个维度分析:
+- ${result.dimensions.ei.letter === 'E' ? '外向(E)' : '内向(I)'}: ${result.dimensions.ei.percent}%
+- ${result.dimensions.sn.letter === 'S' ? '实感(S)' : '直觉(N)'}: ${result.dimensions.sn.percent}%
+- ${result.dimensions.tf.letter === 'T' ? '思考(T)' : '情感(F)'}: ${result.dimensions.tf.percent}%
+- ${result.dimensions.jp.letter === 'J' ? '判断(J)' : '感知(P)'}: ${result.dimensions.jp.percent}%
+
+性格描述: ${personality.description}
+
+适合职业: ${personality.careers.slice(0, 5).join('、')}
+
+恋爱风格: ${personality.loveStyle}
+
+优势: ${personality.strengths.join('、')}
+需注意: ${personality.weaknesses.join('、')}
+
+测试完成时间: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}
+            `;
+            
+            document.getElementById('text-result-content').textContent = textContent.trim();
+        }
+
+        // 更新其他可能类型
+        function updateAlternativeTypes(primaryType) {
+            // 找出最相似的2-3个类型
+            const alternatives = [];
+            const primaryLetters = primaryType.split('');
+            
+            Object.keys(personalityData).forEach(type => {
+                if (type !== primaryType) {
+                    const letters = type.split('');
+                    let similarity = 0;
+                    
+                    for (let i = 0; i < 4; i++) {
+                        if (letters[i] === primaryLetters[i]) similarity++;
+                    }
+                    
+                    if (similarity >= 2) { // 至少2个字母相同
+                        alternatives.push({
+                            type,
+                            similarity,
+                            match: Math.round((similarity / 4) * 100)
+                        });
+                    }
+                }
+            });
+            
+            // 按相似度排序
+            alternatives.sort((a, b) => b.similarity - a.similarity);
+            
+            const container = document.getElementById('alternative-types');
+            container.innerHTML = '';
+            
+            // 显示前2个最相似的类型
+            alternatives.slice(0, 2).forEach(alt => {
+                const personality = personalityData[alt.type];
+                const div = document.createElement('div');
+                div.className = 'alternative-type mb-3';
+                div.innerHTML = `
+                    <strong>${alt.type} (${personality.name}) - 匹配度 ${alt.match}%</strong>
+                    <p class="text-muted">${personality.description.split('。')[0]}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // 保存为图片
+        function saveAsImage() {
+            const element = document.getElementById('result-page');
+            
+            html2canvas(element, {
+                backgroundColor: getComputedStyle(document.body).backgroundColor,
+                scale: 2,
+                useCORS: true,
+                logging: false
+            }).then(canvas => {
+                // 转换为图片URL
+                const imgData = canvas.toDataURL('image/png');
+                
+                // 创建下载链接
+                const link = document.createElement('a');
+                const type = document.getElementById('primary-type').textContent;
+                link.download = `MBTI测试结果_${type}_${new Date().toISOString().slice(0, 10)}.png`;
+                link.href = imgData;
+                link.click();
+            });
+        }
+
+        // 复制文本结果
+        function copyTextResult() {
+            const text = document.getElementById('text-result-content').textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // 显示复制成功提示
+                const originalText = copyTextBtn.innerHTML;
+                copyTextBtn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+                copyTextBtn.disabled = true;
+                
+                setTimeout(() => {
+                    copyTextBtn.innerHTML = originalText;
+                    copyTextBtn.disabled = false;
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动选择并复制文本');
+            });
+        }
+
+        // 分享结果
+        function shareResult() {
+            const type = document.getElementById('primary-type').textContent;
+            const name = personalityData[type]?.name || '';
+            const text = `我的MBTI人格类型是${type} (${name})！快来做这个测试，看看你是什么人格类型吧！`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'MBTI人格测试结果',
+                    text: text,
+                    url: window.location.href
+                });
+            } else {
+                // 降级方案：复制到剪贴板
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('分享文本已复制到剪贴板！\n\n' + text);
+                });
+            }
+        }
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
